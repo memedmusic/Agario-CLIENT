@@ -1,0 +1,47 @@
+<a><b>I cannot be bothered making this page look pretty</b><a>
+<br>
+<br>
+<a>Currently Avaliable Skins:</a>
+<a id="skins"><b>loading</b></a>
+<br>
+<br>
+<a>To use a skin set your name exactly to the name of the skin</a>
+<br>
+<br>
+<br>
+<a>Upload your own skin (PNG ONLY)</a>
+<br>
+<a>Whatever the file you upload is called is what the skin name will be (eg. the file "fish.png" will become the skin name "fish")</a>
+<br>
+<a>The file name (including the .png) must only be 15 characters at most!</a>
+<br>
+<a>You cannot override other skins</a>
+<br>
+<input type="file" id="file"name="upload" accept="image/png" />
+<button type="submit" onclick="upload()">Upload</button>
+<script>
+var req = new XMLHttpRequest();
+req.open("GET","../api/skin")
+req.send()
+req.onreadystatechange = function() {
+    if (req.readyState === 4) {
+      document.getElementById("skins").innerText = req.response;
+    }
+  }
+  function upload(){
+    let data = document.getElementById("file").files[0]
+    let req = new XMLHttpRequest();
+    let formData = new FormData();
+
+    formData.append("photo", data);                                
+  req.open("POST", '/api/upload');
+  req.onload = function () {
+  if(req.status == 200){
+    alert("Skin Uploaded! It should be ready to use within 5 minutes. Refreshing the page helps")
+  } else if(req.status == 409){
+    alert("Another skin already exists with the same name! Upload rejected.")
+  } else if(req.status == 400){alert("There was a problem with your file, either the name is too long or it is corrupt.")}
+};
+  req.send(formData);
+  }
+</script>
